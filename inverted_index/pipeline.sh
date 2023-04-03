@@ -36,16 +36,16 @@ madoop \
 # Copy document count to a separate file
 cp output0/part-00000 total_document_count.txt
 
-# Job 1
-madoop \
-  -input ${PIPELINE_INPUT} \
-  -output output1 \
-  -mapper ./map1.py \
-  -reducer ./reduce1.py
+# # Job 1
+# madoop \
+#   -input ${PIPELINE_INPUT} \
+#   -output output1 \
+#   -mapper ./map1.py \
+#   -reducer ./reduce1.py
 
-# Job 2
-madoop \
-  -input output1 \
-  -output output2 \
-  -mapper ./map2.py \
-  -reducer ./reduce2.py
+# # Job 2
+# madoop \
+#   -input output1 \
+#   -output output2 \
+#   -mapper ./map2.py \
+#   -reducer ./reduce2.py
