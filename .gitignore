@@ -41,6 +41,10 @@ output
 output*
 total_document_count.txt
 */hadoop/inverted_index/inverted_index.txt
+inverted_index_0.txt
+inverted_index_1.txt
+inverted_index_2.txt
+
 
 # Python
 *.pyc

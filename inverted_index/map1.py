@@ -5,6 +5,8 @@ import sys
 import csv
 import re
 
+csv.field_size_limit(sys.maxsize)
+
 # MAP AND REDUCE 1 CLEAN INPUT.
 for line in csv.reader(sys.stdin):
     # Clean input
