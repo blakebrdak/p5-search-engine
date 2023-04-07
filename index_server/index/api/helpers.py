@@ -34,6 +34,10 @@ def load_index():
     # all this documentation i did lmao 
     # -- Blake <3
 
+    # Thank you Blake!
+    # -- Cameron <3
+
+
     # List of all stopwords
     index.stopwords = []
 
