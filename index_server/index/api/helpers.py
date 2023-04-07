@@ -81,7 +81,7 @@ def load_index():
     with open('index_server/index/pagerank.out') as fin:
         for row in csv.reader(fin):
             doc_id, score = row
-            index.pagerank[doc_id] = float(score)
+            index.pagerank[int(doc_id)] = float(score)
 
 
 # vaild_docs = set()  # Set of docs containing entire query so far

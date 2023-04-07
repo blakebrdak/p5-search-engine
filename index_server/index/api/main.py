@@ -100,9 +100,9 @@ def fill_q(cleaned_query, q):
     q_tf = {}
     for word in cleaned_query:
         if word not in q_tf:
-            q_tf[word] = 1
+            q_tf[word] = 1.0
         else:
-            q_tf[word] += 1
+            q_tf[word] += 1.0
 
     # fill query vector with tf * idf
     for word in cleaned_query:
@@ -113,12 +113,9 @@ def fill_d(cleaned_query, d, valid_docs):
     for doc_id in valid_docs:
         d[doc_id] = []
         for word in cleaned_query:
-            # if doc_id in index.index_file[word].keys():
             d[doc_id].append(((index.index_file[word][doc_id]['frequency'] *
                                 index.index_file[word]['idf_score']),
                                 index.index_file[word][doc_id]['norm_factor']))
-            # else:
-            #     d[doc_id].append((0, 0))
 
 def fill_scores(q, d, scores, weight, valid_docs):
     """Fills the scores vector."""
@@ -126,7 +123,7 @@ def fill_scores(q, d, scores, weight, valid_docs):
     q_norm = compute_query_norm(q)
 
     for doc_id in valid_docs:
-        scores.append(((weight * index.pagerank[doc_id] + (1 - weight) *
+        scores.append(((weight * index.pagerank[int(doc_id)] + (1.0 - weight) *
                        compute_tf_idf(q, d[doc_id], q_norm)), doc_id))
 
 def compute_tf_idf(q, doc_vec, q_norm):
@@ -134,18 +131,18 @@ def compute_tf_idf(q, doc_vec, q_norm):
     # see the "tf-idf" section of the spec for more info
 
     # compute the dot product between q and doc_vec
-    dot_product = 0
+    dot_product = 0.0
     for idx, q_val in enumerate(q):
         dot_product += q_val * doc_vec[idx][0]
     
-    if dot_product == 0:
-        return 0
+    if dot_product == 0.0:
+        return 0.0
     else:
         return (dot_product / (q_norm * math.sqrt(doc_vec[0][1])))
 
 def compute_query_norm(q):
     """Computes the query normalization factor."""
-    total = 0
+    total = 0.0
     for val in q:
         total += val * val
 
