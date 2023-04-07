@@ -37,6 +37,14 @@ def hits():
 
     cleaned_query = clean_query(query)
 
+    # ERROR HANDLING:
+    # If one of the words in the cleaned query is not in the index,
+    # return None right away
+    # Returns an empty list.
+    for word in cleaned_query:
+        if word not in index.index_file:
+            return []
+
     # see lab 11 for more info
     # q: tf-idf for the query - see the "Query vector" section of the spec for more info
     # d: dictionary of doc_ids with each doc_id having its own tf-idf vector of tuples
@@ -97,6 +105,22 @@ def fill_q(cleaned_query, q):
 
 def fill_d(cleaned_query, d):
     """Fills the document vectors."""
+    vaild_docs = set()  # Set of docs containing entire query so far
+    for idx, word in enumerate(cleaned_query):
+        words_set = set()  # Set of all docs containing this word
+        for doc_id in index.index_file[word]:
+            print(word, " ", doc_id)
+            if doc_id is not 'idf_score':
+                words_set.add(doc_id)  # Add all docs to set
+        # Intersect set of docs containing word with 
+        # set of docs containing all prev words 
+        if idx != 0:
+            valid_docs = vaild_docs.intersection(words_set)
+        else:  # Initialize the set first iteration
+            vaild_docs = words_set
+    print(valid_docs)
+    # NOTE: Valid docs is a set containing id of all docs that contain both words.
+    
     for doc_id in index.pagerank.keys():
         d[doc_id] = []
         for word in cleaned_query:

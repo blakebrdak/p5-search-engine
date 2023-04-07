@@ -82,3 +82,20 @@ def load_index():
         for row in csv.reader(fin):
             doc_id, score = row
             index.pagerank[int(doc_id)] = float(score)
+
+
+# vaild_docs = set()  # Set of docs containing entire query so far
+#     for idx, word in enumerate(cleaned_query):
+#         words_set = set()  # Set of all docs containing this word
+#         for doc_id in index.index_file[word]:
+#             print(word, " ", doc_id)
+#             if doc_id is not 'idf_score':
+#                 words_set.add(doc_id)  # Add all docs to set
+#         # Intersect set of docs containing word with 
+#         # set of docs containing all prev words 
+#         if idx != 0:
+#             valid_docs = vaild_docs.intersection(words_set)
+#         else:  # Initialize the set first iteration
+#             vaild_docs = words_set
+#     print(valid_docs)
+#     # NOTE: Valid docs is a set containing id of all docs that contain both words.
