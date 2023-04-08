@@ -43,7 +43,7 @@ def hits():
     # Returns an empty list.
     for word in cleaned_query:
         if word not in index.index_file:
-            return []
+            return flask.jsonify({ 'hits': []})
 
     # see lab 11 for more info
     # q: tf-idf for the query - see the "Query vector" section of the spec for more info
@@ -57,6 +57,7 @@ def hits():
     scores = []
     hits = []
 
+    print("Hello!")
     fill_q(cleaned_query, q)
     valid_docs = get_valid_docs(cleaned_query)
     fill_d(cleaned_query, d, valid_docs)
@@ -65,17 +66,17 @@ def hits():
     # sort the scores so that they can be added to hits
     scores.sort(reverse=True)
 
+
     for doc in scores:
         hits.append({
-            'doc_id': int(doc[1]),
+            'docid': int(doc[1]),
             'score': float(doc[0])
         })
-
-    print("hits 0: ", hits[0])
 
     # need this for hits to be returned in the correct format for pytest
     return_dic = {}
     return_dic['hits'] = hits
+
     return flask.jsonify(return_dic), 200
 
 def clean_query(query):
