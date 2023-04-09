@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# search_server
+#
+# Shell Script for database management
+
+set -Eeuo pipefall
+
+# Command line args sanity check
+if [ $# -eq 0 ]
+    then 
+        echo "Usage: ./bin/searchdb (create|destroy|reset)"
+        exit 2
+fi
+
+# Parse argument.  $1 is the first argument
+# TODO: I'm not sure if that's the correct conditional for checking database existance
+case $1 in
+  "create") # update this to check if database already exists or not
+   if [-d var/search.sqlite3 ]; then
+      echo "Error: database already exists"
+      exit 1
+    else
+      echo "Creating database..."
+      mkdir -p var/
+      sqlite3 var/search.sqlite3 < search_server/search/sql/search.sql
+    fi
+    ;;
+
+  "destroy")
+    echo "Destorying databse..."
+    rm -f var/search.sqlite3
+    ;;
+
+  "reset")
+    echo "Resetting database..."
+    rm -f var/search.sqlite3
+    mkdir -p var/
+    sqlite3 var/search.sqlite3 < search_server/search/sql/search.sql
+    ;;
+
+  *)
+    usage
+    exit 1
+    ;;
+esac
