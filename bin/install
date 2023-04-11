@@ -1,7 +1,7 @@
 # !bin/sh
 #
 #
-# Install Script.
+# Install shell script .
 
 # Create and activate venv
 python3 -m venv env

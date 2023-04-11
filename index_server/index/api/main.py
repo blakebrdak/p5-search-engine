@@ -1,16 +1,17 @@
 """REST API for INdex """
 
-import flask
-import index
 import re
 import math
+import flask
+import index
+
 
 @index.app.route('/api/v1/', methods=['GET'])
 def routes():
     """Returns a list of services available."""
     # EXAMPLE OF HOW TO REFERENCE THE GLOBALS
     # return(index.index_file['smelting'])
-    
+
     out = {
         "hits": "/api/v1/hits/",
         "url": "/api/v1/"
@@ -52,30 +53,30 @@ def hits():
     # See the "Document vector" section of the spec for more info
     # scores: stores tuples in the form of (document score, doc_id)
     # hits: list of dictionaries with the return values sorted by score
-    q = []
-    d = {}
+    q_vec = []
+    d_dict = {}
     scores = []
-    hits = []
+    results = []
 
     print("Hello!")
-    fill_q(cleaned_query, q)
+    fill_q(cleaned_query, q_vec)
     valid_docs = get_valid_docs(cleaned_query)
-    fill_d(cleaned_query, d, valid_docs)
-    fill_scores(q, d, scores, weight, valid_docs)
+    fill_d(cleaned_query, d_dict, valid_docs)
+    fill_scores(q_vec, d_dict, scores, weight, valid_docs)
 
     # sort the scores so that they can be added to hits
     scores.sort(reverse=True)
 
 
     for doc in scores:
-        hits.append({
+        results.append({
             'docid': int(doc[1]),
             'score': float(doc[0])
         })
 
     # need this for hits to be returned in the correct format for pytest
     return_dic = {}
-    return_dic['hits'] = hits
+    return_dic['hits'] = results
 
     return flask.jsonify(return_dic), 200
 
@@ -95,7 +96,7 @@ def clean_query(query):
     # returns a list of strings of all of the words in the query
     return text_list
 
-def fill_q(cleaned_query, q):
+def fill_q(cleaned_query, q_vec):
     """Fills the query vector."""
     # dictionary to keep track of the term frequency of the words in the query
     q_tf = {}
@@ -107,44 +108,43 @@ def fill_q(cleaned_query, q):
 
     # fill query vector with tf * idf
     for word in cleaned_query:
-        q.append(q_tf[word] * index.index_file[word]['idf_score'])
+        q_vec.append(q_tf[word] * index.index_file[word]['idf_score'])
 
-def fill_d(cleaned_query, d, valid_docs):
+def fill_d(cleaned_query, d_dict, valid_docs):
     """Fills the document vectors."""    
     for doc_id in valid_docs:
-        d[doc_id] = []
+        d_dict[doc_id] = []
         for word in cleaned_query:
-            d[doc_id].append(((index.index_file[word][doc_id]['frequency'] *
+            d_dict[doc_id].append(((index.index_file[word][doc_id]['frequency'] *
                                 index.index_file[word]['idf_score']),
                                 index.index_file[word][doc_id]['norm_factor']))
 
-def fill_scores(q, d, scores, weight, valid_docs):
+def fill_scores(q_vec, d_dict, scores, weight, valid_docs):
     """Fills the scores vector."""
     # compute query normalization factor for tf-idf
-    q_norm = compute_query_norm(q)
+    q_norm = compute_query_norm(q_vec)
 
     for doc_id in valid_docs:
         scores.append(((weight * index.pagerank[int(doc_id)] + (1.0 - weight) *
-                       compute_tf_idf(q, d[doc_id], q_norm)), doc_id))
+                       compute_tf_idf(q_vec, d_dict[doc_id], q_norm)), doc_id))
 
-def compute_tf_idf(q, doc_vec, q_norm):
+def compute_tf_idf(q_vec, doc_vec, q_norm):
     """Computes the tf-idf score for each document."""
     # see the "tf-idf" section of the spec for more info
 
     # compute the dot product between q and doc_vec
     dot_product = 0.0
-    for idx, q_val in enumerate(q):
+    for idx, q_val in enumerate(q_vec):
         dot_product += q_val * doc_vec[idx][0]
-    
+
     if dot_product == 0.0:
         return 0.0
-    else:
-        return (dot_product / (q_norm * math.sqrt(doc_vec[0][1])))
+    return (dot_product / (q_norm * math.sqrt(doc_vec[0][1])))
 
-def compute_query_norm(q):
+def compute_query_norm(q_vec):
     """Computes the query normalization factor."""
     total = 0.0
-    for val in q:
+    for val in q_vec:
         total += val * val
 
     return math.sqrt(total)
@@ -158,8 +158,8 @@ def get_valid_docs(cleaned_query):
             # print(word, " ", doc_id)
             if doc_id != 'idf_score':
                 words_set.add(doc_id)  # Add all docs to set
-        # Intersect set of docs containing word with 
-        # set of docs containing all prev words 
+        # Intersect set of docs containing word with
+        # set of docs containing all prev words
         if idx != 0:
             valid_docs = valid_docs.intersection(words_set)
         else:  # Initialize the set first iteration

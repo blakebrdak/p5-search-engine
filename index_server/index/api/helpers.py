@@ -1,8 +1,7 @@
 """Helper functions for the index server."""
 
 import csv
-import flask
-import index 
+import index
 
 
 def load_index():
@@ -11,10 +10,10 @@ def load_index():
     # Reference the vars with index.<varname> in main.
 
     index.index_file = {}
-    # This is a dictionary of dictionaries (of dictionaries). 
-    # each word has an associated dictionary of 
+    # This is a dictionary of dictionaries (of dictionaries).
+    # each word has an associated dictionary of
     # each document that it appears in, containing the
-    # frequency and norm factor for that document. 
+    # frequency and norm factor for that document.
     # Outer dictionary also has idf of the word.
     #
     # --- EXAMPLE USAGE --- #
@@ -31,12 +30,11 @@ def load_index():
     #   ... and so on
     # }
     # I really hope this is a smart way to store the info after
-    # all this documentation i did lmao 
+    # all this documentation i did lmao
     # -- Blake <3
 
     # Thank you Blake!
     # -- Cameron <3
-
 
     # List of all stopwords
     index.stopwords = []
@@ -45,8 +43,9 @@ def load_index():
     index.pagerank = {}
 
     # Load inverted index
-    idx_path = 'index_server/index/inverted_index/' + index.app.config['INDEX_PATH']
-    with open(idx_path) as fin:
+    idx_path = 'index_server/index/inverted_index/'
+    idx_path = idx_path + index.app.config['INDEX_PATH']
+    with open(idx_path, encoding='utf-8') as fin:
         for row in fin:
             # initial setup before looping each doc
             row = row.strip().split()
@@ -68,17 +67,16 @@ def load_index():
                 else:  # When idx % 3 = 2
                     index.index_file[word][doc_id] = {}
                     index.index_file[word][doc_id]['frequency'] = frequency
-                    index.index_file[word][doc_id]['norm_factor'] = float(item.strip())
-
-
+                    out = float(item.strip())
+                    index.index_file[word][doc_id]['norm_factor'] = out
 
     # Load stopwords
-    with open('index_server/index/stopwords.txt') as fin:
+    with open('index_server/index/stopwords.txt', encoding='utf-8') as fin:
         for row in fin:
             index.stopwords.append(row.strip())
 
     # Load PageRank
-    with open('index_server/index/pagerank.out') as fin:
+    with open('index_server/index/pagerank.out', encoding='utf-8') as fin:
         for row in csv.reader(fin):
             doc_id, score = row
             index.pagerank[int(doc_id)] = float(score)
@@ -91,11 +89,11 @@ def load_index():
 #             print(word, " ", doc_id)
 #             if doc_id is not 'idf_score':
 #                 words_set.add(doc_id)  # Add all docs to set
-#         # Intersect set of docs containing word with 
-#         # set of docs containing all prev words 
+#         # Intersect set of docs containing word with
+#         # set of docs containing all prev words
 #         if idx != 0:
 #             valid_docs = vaild_docs.intersection(words_set)
 #         else:  # Initialize the set first iteration
 #             vaild_docs = words_set
 #     print(valid_docs)
-#     # NOTE: Valid docs is a set containing id of all docs that contain both words.
+#

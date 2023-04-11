@@ -1,0 +1,58 @@
+# !bin/bash
+#
+# shell script for Search Server.
+#
+#
+# Command line args sanity check
+if [ $# -eq 0 ]
+    then 
+        echo "Usage: ./bin/search (start|stop|status|restart)"
+        exit 2
+fi
+# Parse argument.  $1 is the first argument
+case $1 in
+  "start") 
+    filename=var/search.sqlite3
+    if pgrep -f "flask --app search run --host 0.0.0.0 --port 8000" &> /dev/null; then
+        echo "Error: search server is already running"
+        exit 1
+    elif ! test -f "$filename";
+    then
+      echo "Error: can't find search database var/search.sqlite3"
+      echo "Try: ./bin/searchdb create"
+      exit 1
+    elif ! pgrep -f "flask --app index run --host 0.0.0.0 --port 9000" &> /dev/null; then
+        echo "Error: index server is not running"
+        echo "Try ./bin/index start"
+        exit 1
+    else
+        echo "starting search server ..."
+        mkdir -p var/log
+        rm -f var/log/search.log
+        flask --app search run --host 0.0.0.0 --port 8000 &> var/log/search.log &
+    fi
+    ;;
+  "stop")
+    echo "stopping search server ..."
+    pkill -f 'flask --app search run --host 0.0.0.0 --port 8000' || true
+    ;;
+  "restart")
+    echo "stopping search server ..."
+    pkill -f 'flask --app search run --host 0.0.0.0 --port 8000' || true
+    echo "starting search server ..."
+    mkdir -p var/log
+    rm -f var/log/search.log
+    flask --app search run --host 0.0.0.0 --port 8000 &> var/log/search.log &
+    ;;
+  "status")
+    if pgrep -f "flask --app search run --host 0.0.0.0 --port 8000" &> /dev/null; then
+      echo "search server running"
+    else
+      echo "search server stopped"
+    fi
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac

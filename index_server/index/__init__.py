@@ -16,4 +16,3 @@ import index.api  # noqa: E402  pylint: disable=wrong-import-position
 
 # Load the inverted index, stopwords, and pagerank into memory
 index.api.load_index()
-

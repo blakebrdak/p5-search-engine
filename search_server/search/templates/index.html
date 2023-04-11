@@ -22,11 +22,23 @@
                 </form>
             </div>
             <div class="docs">
-                {% for result in results %}
-                <a class="doc_url" href="{{result.url}}">{{result.url}}</a>
-                <div class="doc_title">{{result.title}}</div>
-                <div class="doc_summary">{{result.summary}}</div>
-                {% endfor %}
+                {% if results|length > 0 %}
+                    {% for result in results %}
+                    {% if result.url == '' %}
+                    <a class="doc_url">No url available</a>
+                    {% else %}
+                    <a class="doc_url" href="{{result.url}}">{{result.url}}</a>
+                    {% endif %}
+                    <div class="doc_title">{{result.title}}</div>
+                    {% if result.summary == '' %}
+                    <div class="doc_summary">No summary available</div>
+                    {% else %}
+                    <div class="doc_summary">{{result.summary}}</div>
+                    {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="no_results">No search results found!</div>
+                {% endif %}
             </div>
         </main>
     </body>
