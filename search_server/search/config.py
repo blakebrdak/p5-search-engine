@@ -9,6 +9,6 @@ SEARCH_INDEX_SEGMENT_API_URLS = [
 ]
 
 # File Upload to var/uploads/
-SEARCH_ROOT = pathlib.Path(__file__).resolve().parent.parent
+PROJECT_ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 
-DATABASE_FILENAME = SEARCH_ROOT/'sql'/'search.sql'
+DATABASE_FILENAME = PROJECT_ROOT/'var'/'search.sqlite3'

@@ -22,7 +22,11 @@
                 </form>
             </div>
             <div class="docs">
-                <!--- This is where the results will go. -->
+                {% for result in results %}
+                <a class="doc_url" href="{{result.url}}">{{result.url}}</a>
+                <div class="doc_title">{{result.title}}</div>
+                <div class="doc_summary">{{result.summary}}</div>
+                {% endfor %}
             </div>
         </main>
     </body>

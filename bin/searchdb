@@ -4,7 +4,7 @@
 #
 # Shell Script for database management
 
-set -Eeuo pipefall
+set -Eeuo pipefail
 
 # Command line args sanity check
 if [ $# -eq 0 ]
@@ -17,7 +17,9 @@ fi
 # TODO: I'm not sure if that's the correct conditional for checking database existance
 case $1 in
   "create") # update this to check if database already exists or not
-   if [-d var/search.sqlite3 ]; then
+    filename=var/search.sqlite3
+    if test -f "$filename";
+    then
       echo "Error: database already exists"
       exit 1
     else

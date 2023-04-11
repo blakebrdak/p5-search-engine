@@ -20,7 +20,8 @@ def get_db():
     https://flask.palletsprojects.com/en/1.0.x/appcontext/#storing-data
     """
     if 'sqlite_db' not in flask.g:
-        db_filename = index.app.config['DATABASE_FILENAME']
+        db_filename = search.app.config['DATABASE_FILENAME']
+        print(db_filename)
         flask.g.sqlite_db = sqlite3.connect(str(db_filename))
         flask.g.sqlite_db.row_factory = dict_factory
 
