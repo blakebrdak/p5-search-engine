@@ -1,4 +1,4 @@
-"""Index Server API"""
+"""Index Server API."""
 
 from index.api.main import routes
 from index.api.main import hits

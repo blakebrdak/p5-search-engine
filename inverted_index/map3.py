@@ -3,14 +3,12 @@
 
 import sys
 
-# Group everything with docid as key, word and idfk as val
+# Group everything with docid as key, word and IDFK as val
 for line in sys.stdin:
     word, items = line.strip().split('\t')
-    idfk = -1
+    IDFK = -1
     for idx, item in enumerate(items.split()):
         if idx == 0:
-            idfk = item.strip()
+            IDFK = item.strip()
         else:
-            print(f'{item.strip()}\t{word} {idfk}')
-
-    
+            print(f'{item.strip()}\t{word} {IDFK}')

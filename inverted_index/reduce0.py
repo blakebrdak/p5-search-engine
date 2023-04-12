@@ -8,10 +8,10 @@ import sys
 import itertools
 
 
-def reduce_one_group(key, group):
+def reduce_one_group(_, group):
     """Reduce one group."""
     count = 0
-    for line in group:
+    for _ in group:
         count = count + 1
     print(count)
 

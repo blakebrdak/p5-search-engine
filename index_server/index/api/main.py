@@ -1,4 +1,4 @@
-"""REST API for INdex """
+"""REST API for Index."""
 
 import re
 import math
@@ -8,7 +8,7 @@ import index
 
 @index.app.route('/api/v1/', methods=['GET'])
 def routes():
-    """Returns a list of services available."""
+    """Return a list of services available."""
     # EXAMPLE OF HOW TO REFERENCE THE GLOBALS
     # return(index.index_file['smelting'])
 
@@ -22,8 +22,9 @@ def routes():
 
 @index.app.route('/api/v1/hits/', methods=['GET'])
 def hits():
-    """Returns a list of hits with doc ID and score."""
-    # Go to the project 5 spec release party recording at 23 minutes for an explanation
+    """Return a list of hits with doc ID and score."""
+    # Go to the project 5 spec release party recording
+    # at 23 minutes for an explanation
     # of how this is supposed to work.
 
     # get the query target from the url
@@ -44,11 +45,13 @@ def hits():
     # Returns an empty list.
     for word in cleaned_query:
         if word not in index.index_file:
-            return flask.jsonify({ 'hits': []})
+            return flask.jsonify({'hits': []})
 
     # see lab 11 for more info
-    # q: tf-idf for the query - see the "Query vector" section of the spec for more info
-    # d: dictionary of doc_ids with each doc_id having its own tf-idf vector of tuples
+    # q: tf-idf for the query - see the "Query vector"
+    # section of the spec for more info
+    # d: dictionary of doc_ids with each doc_id having
+    # its own tf-idf vector of tuples
     # in the form (tf-idf, norm_factor)
     # See the "Document vector" section of the spec for more info
     # scores: stores tuples in the form of (document score, doc_id)
@@ -67,7 +70,6 @@ def hits():
     # sort the scores so that they can be added to hits
     scores.sort(reverse=True)
 
-
     for doc in scores:
         results.append({
             'docid': int(doc[1]),
@@ -80,13 +82,14 @@ def hits():
 
     return flask.jsonify(return_dic), 200
 
+
 def clean_query(query):
-    """Cleans the input query and returns the cleaned input."""
+    """Clean the input query and returns the cleaned input."""
     # Uses the same structure as map1.py to clean the query input
     # Clean input
     text = re.sub(r"[^a-zA-Z0-9 ]+", "", query)  # Remove special chars
     text = text.casefold()  # all lowercase
-    text_list = text.strip().split() # Should be delimited by space by default
+    text_list = text.strip().split()  # Should be delimited by space by default
     # Clean out stopwords
     for word in index.stopwords:
         if word.strip() in text_list:
@@ -96,8 +99,9 @@ def clean_query(query):
     # returns a list of strings of all of the words in the query
     return text_list
 
+
 def fill_q(cleaned_query, q_vec):
-    """Fills the query vector."""
+    """Fill the query vector."""
     # dictionary to keep track of the term frequency of the words in the query
     q_tf = {}
     for word in cleaned_query:
@@ -110,17 +114,21 @@ def fill_q(cleaned_query, q_vec):
     for word in cleaned_query:
         q_vec.append(q_tf[word] * index.index_file[word]['idf_score'])
 
+
 def fill_d(cleaned_query, d_dict, valid_docs):
-    """Fills the document vectors."""    
+    """Fill the document vectors."""
     for doc_id in valid_docs:
         d_dict[doc_id] = []
         for word in cleaned_query:
-            d_dict[doc_id].append(((index.index_file[word][doc_id]['frequency'] *
-                                index.index_file[word]['idf_score']),
-                                index.index_file[word][doc_id]['norm_factor']))
+            d_dict[doc_id].append(((index.index_file[word][doc_id]
+                                    ['frequency'] * index.index_file[word]
+                                    ['idf_score']),
+                                  index.index_file[word][doc_id]
+                                  ['norm_factor']))
+
 
 def fill_scores(q_vec, d_dict, scores, weight, valid_docs):
-    """Fills the scores vector."""
+    """Fill the scores vector."""
     # compute query normalization factor for tf-idf
     q_norm = compute_query_norm(q_vec)
 
@@ -128,8 +136,9 @@ def fill_scores(q_vec, d_dict, scores, weight, valid_docs):
         scores.append(((weight * index.pagerank[int(doc_id)] + (1.0 - weight) *
                        compute_tf_idf(q_vec, d_dict[doc_id], q_norm)), doc_id))
 
+
 def compute_tf_idf(q_vec, doc_vec, q_norm):
-    """Computes the tf-idf score for each document."""
+    """Compute the tf-idf score for each document."""
     # see the "tf-idf" section of the spec for more info
 
     # compute the dot product between q and doc_vec
@@ -141,16 +150,18 @@ def compute_tf_idf(q_vec, doc_vec, q_norm):
         return 0.0
     return (dot_product / (q_norm * math.sqrt(doc_vec[0][1])))
 
+
 def compute_query_norm(q_vec):
-    """Computes the query normalization factor."""
+    """Compute the query normalization factor."""
     total = 0.0
     for val in q_vec:
         total += val * val
 
     return math.sqrt(total)
 
+
 def get_valid_docs(cleaned_query):
-    """Generates a set of valid documents."""
+    """Generate a set of valid documents."""
     valid_docs = set()  # Set of docs containing entire query so far
     for idx, word in enumerate(cleaned_query):
         words_set = set()  # Set of all docs containing this word
@@ -166,6 +177,7 @@ def get_valid_docs(cleaned_query):
             valid_docs = words_set
 
     # print("valid_docs: ", valid_docs)
-    # NOTE: Valid docs is a set containing id of all docs that contain both words.
+    # NOTE: Valid docs is a set containing id of all docs
+    # that contain both words.
 
     return valid_docs

@@ -6,10 +6,9 @@ https://github.com/eecs485staff/madoop/blob/main/README_Hadoop_Streaming.md
 """
 import sys
 import itertools
-import math
 
 
-def reduce_one_group(key, group):
+def reduce_one_group(_, group):
     """Reduce one group."""
     group = list(group)
 
@@ -22,14 +21,13 @@ def reduce_one_group(key, group):
             words[word].append(f'{doc_id} {freq} {norm}')
         else:
             words[word].append(f'{doc_id} {freq} {norm}')
-    
+
     # Print final output
-    for word in words:
+    for word, wordval in words:
         out_groups = words[word][1:]
         out_groups.sort()
         out_final = ' '.join(out_groups)
-        print(f"{word} {words[word][0]} {out_final}")
-        
+        print(f"{word} {wordval[0]} {out_final}")
 
 
 def keyfunc(line):

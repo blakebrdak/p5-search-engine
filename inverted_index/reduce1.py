@@ -8,7 +8,7 @@ import sys
 import itertools
 
 
-def reduce_one_group(key, group):
+def reduce_one_group(_, group):
     """Reduce one group."""
     group = list(group)
 
@@ -16,6 +16,7 @@ def reduce_one_group(key, group):
     for row in group:
         row_list = row.split('\t')
         print(f'{row_list[0]}\t{row_list[1].strip()}')
+
 
 def keyfunc(line):
     """Return the key from a TAB-delimited key-value pair."""
