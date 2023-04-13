@@ -3,7 +3,7 @@
 
 import sys
 
-# Group everything with docid as key, word and IDFK as val
+# Group everything with docid as key, word and idfk as val
 for line in sys.stdin:
     word, items = line.strip().split('\t')
     IDFK = -1

@@ -28,12 +28,12 @@ def reduce_one_group(key, group):
             seen_terms[word] = seen_terms[word] + 1
     # Calculate norm factor for doc
     norm = 0
-    for term, termval in seen_terms:
-        norm = norm + ((termval * float(term_idfk[term])) ** 2)
+    for term, item in seen_terms.items():
+        norm = norm + ((item * float(term_idfk[term])) ** 2)
 
     # handle output
-    for word, wordval in seen_terms:
-        print(f'{word}\t{term_idfk[word]} {key} {wordval} {norm}')
+    for word, item in seen_terms.items():
+        print(f'{word}\t{term_idfk[word]} {key} {item} {norm}')
 
 
 def keyfunc(line):

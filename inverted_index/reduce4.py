@@ -8,7 +8,7 @@ import sys
 import itertools
 
 
-def reduce_one_group(_, group):
+def reduce_one_group(group):
     """Reduce one group."""
     group = list(group)
 
@@ -23,11 +23,11 @@ def reduce_one_group(_, group):
             words[word].append(f'{doc_id} {freq} {norm}')
 
     # Print final output
-    for word, wordval in words:
-        out_groups = words[word][1:]
+    for word, val in words.items():
+        out_groups = val[1:]
         out_groups.sort()
         out_final = ' '.join(out_groups)
-        print(f"{word} {wordval[0]} {out_final}")
+        print(f"{word} {val[0]} {out_final}")
 
 
 def keyfunc(line):
@@ -37,8 +37,8 @@ def keyfunc(line):
 
 def main():
     """Divide sorted lines into groups that share a key."""
-    for key, group in itertools.groupby(sys.stdin, keyfunc):
-        reduce_one_group(key, group)
+    for _, group in itertools.groupby(sys.stdin, keyfunc):
+        reduce_one_group(group)
 
 
 if __name__ == "__main__":

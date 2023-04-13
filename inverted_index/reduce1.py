@@ -24,9 +24,9 @@ def keyfunc(line):
 
 
 def main():
-    """Divide sorted lines into groups that share a key."""
-    for key, group in itertools.groupby(sys.stdin, keyfunc):
-        reduce_one_group(key, group)
+    """Split lines into groups that share a key."""
+    for keyey, group in itertools.groupby(sys.stdin, keyfunc):
+        reduce_one_group(keyey, group)
 
 
 if __name__ == "__main__":

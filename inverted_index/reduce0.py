@@ -16,15 +16,15 @@ def reduce_one_group(_, group):
     print(count)
 
 
-def keyfunc(line):
+def keyfunction(line):
     """Return the key from a TAB-delimited key-value pair."""
     return line.partition("\t")[0]
 
 
 def main():
-    """Divide sorted lines into groups that share a key."""
-    for key, group in itertools.groupby(sys.stdin, keyfunc):
-        reduce_one_group(key, group)
+    """Divide into groups that share key."""
+    for key, grouppp in itertools.groupby(sys.stdin, keyfunction):
+        reduce_one_group(key, grouppp)
 
 
 if __name__ == "__main__":

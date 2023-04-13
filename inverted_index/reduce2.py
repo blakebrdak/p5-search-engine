@@ -20,7 +20,7 @@ def reduce_one_group(key, group):
 
     # Calculate inverse document frequency
     idfk = -1  # init val outside of context mgr
-    with open("total_document_count.txt", encoding="utf-8") as count_doc:
+    with open("total_document_count.txt", encoding='utf-8') as count_doc:
         total_docs = count_doc.readline()  # Read the count
         docs_set = set(docs)
         idfk = math.log10(int(total_docs) / len(docs_set))
@@ -35,9 +35,9 @@ def keyfunc(line):
 
 
 def main():
-    """Divide sorted lines into groups that share a key."""
-    for key, group in itertools.groupby(sys.stdin, keyfunc):
-        reduce_one_group(key, group)
+    """Divide sorted groups that share a key."""
+    for keyyy, group in itertools.groupby(sys.stdin, keyfunc):
+        reduce_one_group(keyyy, group)
 
 
 if __name__ == "__main__":
