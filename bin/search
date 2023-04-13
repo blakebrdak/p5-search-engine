@@ -1,4 +1,4 @@
-# !bin/bash
+#!/bin/bash
 #
 # shell script for Search Server.
 #
@@ -49,6 +49,7 @@ case $1 in
       echo "search server running"
     else
       echo "search server stopped"
+      exit 1
     fi
     ;;
   *)
